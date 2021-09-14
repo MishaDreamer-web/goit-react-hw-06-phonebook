@@ -9,7 +9,8 @@ const ContactListItem = ({ id, name, number, onRemove }) => {
 };
 
 const ContactsList = ({ contacts, onRemove }) => {
-  if (contacts.length === 0) return null;
+  if (contacts.length === 0) return <p>There are no contacts in the list</p>;
+
   return (
     <ul>
       {contacts.map(({ id, name, number }) => (

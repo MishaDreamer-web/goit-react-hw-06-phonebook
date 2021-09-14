@@ -31,11 +31,23 @@ const ContactForm = ({ onAddContact }) => {
 
   const handleSubmitForm = e => {
     e.preventDefault();
-    onAddContact({ name, number });
 
-    if ((!name && number) || (name && !number)) {
+    if ((!name || name.trim() === '') && (!number || number.trim() === '')) {
+      alert('Fill in the fields "Name" and "Number"');
       return;
     }
+
+    if (!name || name.trim() === '') {
+      alert('Field "Name" is empty');
+      return;
+    }
+
+    if (!number || number.trim() === '') {
+      alert('Field "Number" is empty');
+      return;
+    }
+
+    onAddContact({ name, number });
 
     resetForm();
   };
@@ -72,9 +84,9 @@ const ContactForm = ({ onAddContact }) => {
   );
 };
 
-// ContactForm.propTypes = {
-//   onAddContact: PropTypes.func.isRequired,
-// };
+ContactForm.propTypes = {
+  onAddContact: PropTypes.func.isRequired,
+};
 
 const mapDispatchToProps = dispatch => ({
   onAddContact: data => dispatch(contactFormActions.addContact(data)),
