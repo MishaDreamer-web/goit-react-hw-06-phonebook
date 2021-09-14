@@ -1,4 +1,6 @@
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import contactFormActions from '../../redux/contact-form/contact-form-actions.js';
+import { getVisibleContacts } from '../../redux/contact-form/contact-form-selectors.js';
 
 const ContactListItem = ({ id, name, number, onRemove }) => {
   return (
@@ -8,7 +10,12 @@ const ContactListItem = ({ id, name, number, onRemove }) => {
   );
 };
 
-const ContactsList = ({ contacts, onRemove }) => {
+const ContactsList = () => {
+  const contacts = useSelector(getVisibleContacts);
+  const dispatch = useDispatch();
+
+  const onRemove = id => dispatch(contactFormActions.removeContact(id));
+
   if (contacts.length === 0) return <p>There are no contacts in the list</p>;
 
   return (
@@ -23,17 +30,6 @@ const ContactsList = ({ contacts, onRemove }) => {
       ))}
     </ul>
   );
-};
-
-ContactsList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-  onRemove: PropTypes.func.isRequired,
 };
 
 export default ContactsList;

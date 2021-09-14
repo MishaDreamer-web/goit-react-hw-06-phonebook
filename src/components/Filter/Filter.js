@@ -1,30 +1,20 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getFilter } from '../../redux/contact-form/contact-form-selectors';
 import contactFormActions from '../../redux/contact-form/contact-form-actions';
 
-const Filter = ({ value, onChange }) => {
+const Filter = () => {
+  const value = useSelector(getFilter);
+  const dispatch = useDispatch();
+
   return (
     <input
       type="text"
       name="filter"
       value={value}
-      onChange={onChange}
+      onChange={e => dispatch(contactFormActions.changeFilter(e.target.value))}
       placeholder="Enter name for Search"
     />
   );
 };
 
-Filter.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = state => ({
-  value: state.contacts.filter,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onChange: e => dispatch(contactFormActions.changeFilter(e.target.value)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Filter);
+export default Filter;

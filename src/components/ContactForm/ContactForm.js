@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import contactFormActions from '../../redux/contact-form/contact-form-actions';
+import { getVisibleContacts } from '../../redux/contact-form/contact-form-selectors';
 import PropTypes from 'prop-types';
 
 import shortid from 'shortid';
 
-const ContactForm = ({ onAddContact }) => {
+const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const contacts = useSelector(getVisibleContacts);
+  const dispatch = useDispatch();
 
   const nameInputId = shortid.generate();
   const numberInputId = shortid.generate();
@@ -32,6 +36,16 @@ const ContactForm = ({ onAddContact }) => {
   const handleSubmitForm = e => {
     e.preventDefault();
 
+    if (contacts.find(contact => contact.name === e.target.name.value)) {
+      alert(`${e.target.name.value} is already in contacts`);
+      return;
+    }
+
+    if (contacts.find(contact => contact.number === e.target.number.value)) {
+      alert(`Number ${e.target.number.value} is already in contacts`);
+      return;
+    }
+
     if ((!name || name.trim() === '') && (!number || number.trim() === '')) {
       alert('Fill in the fields "Name" and "Number"');
       return;
@@ -47,7 +61,7 @@ const ContactForm = ({ onAddContact }) => {
       return;
     }
 
-    onAddContact({ name, number });
+    dispatch(contactFormActions.addContact({ name, number }));
 
     resetForm();
   };
@@ -84,12 +98,4 @@ const ContactForm = ({ onAddContact }) => {
   );
 };
 
-ContactForm.propTypes = {
-  onAddContact: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = dispatch => ({
-  onAddContact: data => dispatch(contactFormActions.addContact(data)),
-});
-
-export default connect(null, mapDispatchToProps)(ContactForm);
+export default ContactForm;
